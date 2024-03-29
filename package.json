@@ -16,6 +16,7 @@
     "bignumber.js": "^9.1.2",
     "date-fns": "^3.6.0",
     "dexie": "^4.0.1",
+    "dexie-export-import": "^4.1.1",
     "dexie-react-hooks": "^1.1.7",
     "next": "14.1.4",
     "ramda": "^0.29.1",

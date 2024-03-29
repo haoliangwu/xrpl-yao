@@ -11,6 +11,8 @@ import {
   INITIAL_TO_DATE,
 } from "@/consts";
 import wellKnownAccounts from "../well-known-accounts.json";
+import { db } from "@/db";
+import { downloadBlobData } from "@/utils";
 
 const now = new Date();
 
@@ -36,6 +38,8 @@ const Search = (props: React.PropsWithChildren<{}>) => {
       window.removeEventListener(SYNC_PARAMS, handler);
     };
   }, []);
+
+  const fileRef = React.useRef<HTMLInputElement>(null);
 
   return (
     <form>
@@ -120,6 +124,43 @@ const Search = (props: React.PropsWithChildren<{}>) => {
         >
           Query
         </button>
+        <button
+          className="p-2 border-2 border-blue-500 border-dashed"
+          type="button"
+          onClick={() => {
+            console.log("start exporting...");
+            import("dexie-export-import")
+              .then(({ exportDB }) => exportDB(db))
+              .then((blob) => downloadBlobData(blob, "xrpl"))
+              .finally(() => {
+                console.log("end exporting...");
+              });
+          }}
+        >
+          Export
+        </button>
+        <button
+          className="p-2 border-2 border-blue-500 border-dashed"
+          type="button"
+          onClick={() => {
+            console.log("start importing...");
+            fileRef.current?.click();
+          }}
+        >
+          Import
+        </button>
+        <input
+          hidden
+          type="file"
+          ref={fileRef}
+          onChange={(e) => {
+            import("dexie-export-import")
+              .then(({ importInto }) => importInto(db, e.target.files![0]))
+              .then(() => {
+                console.log("end importing...");
+              });
+          }}
+        />
       </div>
     </form>
   );
