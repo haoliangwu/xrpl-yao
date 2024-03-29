@@ -87,10 +87,10 @@ const Search = (props: React.PropsWithChildren<{}>) => {
           value={query.marker}
           onChange={(e) => setQuery((p) => ({ ...p, marker: e.target.value }))}
         ></input>
-        <label htmlFor="marker">Deposit</label>
+        <label htmlFor="deposit">Deposit</label>
         <input
           type="checkbox"
-          id="marker"
+          id="deposit"
           checked={query.isDeposit}
           onChange={(e) =>
             setQuery((p) => ({ ...p, isDeposit: e.target.checked }))
