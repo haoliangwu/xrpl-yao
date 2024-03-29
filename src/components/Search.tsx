@@ -130,7 +130,19 @@ const Search = (props: React.PropsWithChildren<{}>) => {
           onClick={() => {
             console.log("start exporting...");
             import("dexie-export-import")
-              .then(({ exportDB }) => exportDB(db))
+              .then(({ exportDB }) =>
+                exportDB(db, {
+                  progressCallback(progress) {
+                    console.log(
+                      (
+                        (progress.completedRows / (progress.totalRows ?? 1)) *
+                        100
+                      ).toFixed(2) + "%"
+                    );
+                    return progress.done;
+                  },
+                })
+              )
               .then((blob) => downloadBlobData(blob, "xrpl"))
               .finally(() => {
                 console.log("end exporting...");
@@ -155,7 +167,20 @@ const Search = (props: React.PropsWithChildren<{}>) => {
           ref={fileRef}
           onChange={(e) => {
             import("dexie-export-import")
-              .then(({ importInto }) => importInto(db, e.target.files![0]))
+              .then(({ importInto }) =>
+                importInto(db, e.target.files![0], {
+                  overwriteValues: true,
+                  progressCallback(progress) {
+                    console.log(
+                      (
+                        (progress.completedRows / (progress.totalRows ?? 1)) *
+                        100
+                      ).toFixed(2) + "%"
+                    );
+                    return progress.done;
+                  },
+                })
+              )
               .then(() => {
                 console.log("end importing...");
               });
